@@ -19,7 +19,7 @@ void
 main(int argc, char *argv[])
 {
 	char *u, pass[32];
-	int which, newkey, newbio, dosecret;
+	int which, newkey, newbio, dosecret, check;
 	long t;
 	Authkey key;
 	Acctbio a;
@@ -28,9 +28,13 @@ main(int argc, char *argv[])
 	fmtinstall('K', deskeyfmt);
 
 	which = 0;
+	check = 1;
 	ARGBEGIN{
 	case 'p':
 		which |= Plan9;
+		break;
+	case 'f':
+		check=0;
 		break;
 	case 'n':
 		which |= Securenet;
@@ -58,7 +62,7 @@ main(int argc, char *argv[])
 		f = &fs[Plan9];
 		newkey = !exists(f->keys, u) || answer("assign new Plan 9 password?");
 		if(newkey)
-			getpass(&key, pass, 1, 1);
+			getpass(&key, pass, check, 1);
 		dosecret = answer("assign new Inferno/POP secret?");
 		if(dosecret)
 			if(!newkey || !answer("make it the same as Plan 9 password?"))
